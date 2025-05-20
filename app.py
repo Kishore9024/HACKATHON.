@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from PIL import Image
-from streamlit_image_coordinates import streamlit_image_coordinates
+from streamlit_image_coordinates import streamlit_image_coordinates  # ✅ Correct import
 
 # Load color dataset
 @st.cache_data
@@ -20,16 +20,19 @@ def get_color_name(R, G, B, color_data):
     closest_color = None
     for _, row in color_data.iterrows():
         try:
-            # ✅ Fixed Euclidean distance formula
+            # ✅ Euclidean distance formula
             d = ((R - int(row['R']))**2 + (G - int(row['G']))**2 + (B - int(row['B']))**2) ** 0.5
             if d < min_dist:
                 min_dist = d
                 closest_color = row
         except Exception as e:
             st.write(f"Error reading row: {row} - {e}")
-    
+
     if closest_color is not None:
-        return closest_color
+        return {
+            'color_name': closest_color['color_name'],
+            'hex': closest_color['hex']
+        }
     else:
         return {
             'color_name': 'Unknown',
